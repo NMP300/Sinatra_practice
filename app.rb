@@ -8,6 +8,7 @@ FILE_ID = SecureRandom.uuid
 
 get "/" do
   @memo_list = Dir.glob("memos/*")
+  
   erb :home
 end
 
@@ -29,5 +30,3 @@ end
 get "/memo" do
   "show memo "
 end
-
-
