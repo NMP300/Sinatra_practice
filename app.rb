@@ -3,15 +3,19 @@
 require "sinatra"
 require "sinatra/reloader"
 require "securerandom"
+require "json"
 
 FILE_ID = SecureRandom.uuid
 
 get "/" do
-  memo = open("memos/#{@name}").read
+  memo = open("memos/#{@name[:id]}").read
   hash = JSON.parse(memo)
-  @id  = hash["id"]
   title = "<a href=memo/#{@id}>#{hash["title"]}</a>"
-  @titles << title
+  # memo = open("memos/#{@name}").read
+  # hash = JSON.parse(memo)
+  # @id  = hash["id"]
+  # title = "<a href=memo/#{@id}>#{hash["title"]}</a>"
+  # @titles << title
   erb :home
 end
 
@@ -22,7 +26,7 @@ end
 post "/new" do
   @memo_id = FILE_ID
   @memo = { id: "#{@memo_id}", title: params[:title], body: params[:body] }
-  File.open("memos/#{@memo[:id]}.txt", "w") { |f| f.print "#{@memo}" }
+  File.open("memos/#{@memo[:id]}.json", "w") { |f| f.print "#{@memo.to_json}" }
   erb :new
 end
 
