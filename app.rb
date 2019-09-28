@@ -7,8 +7,11 @@ require "securerandom"
 FILE_ID = SecureRandom.uuid
 
 get "/" do
-  @memo_list = Dir.glob("memos/*")
-  
+  memo = open("memos/#{@name}").read
+  hash = JSON.parse(memo)
+  @id  = hash["id"]
+  title = "<a href=memo/#{@id}>#{hash["title"]}</a>"
+  @titles << title
   erb :home
 end
 
@@ -17,9 +20,9 @@ get "/new" do
 end
 
 post "/new" do
-  @memo = params[:memo]
-  @file = File.open("memos/#{FILE_ID}.txt", "w") { |f| f.puts "#{@memo}" }
-  redirect "/"
+  @memo_id = FILE_ID
+  @memo = { id: "#{@memo_id}", title: params[:title], body: params[:body] }
+  File.open("memos/#{@memo[:id]}.txt", "w") { |f| f.print "#{@memo}" }
   erb :new
 end
 
