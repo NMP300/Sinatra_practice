@@ -8,23 +8,15 @@ require "json"
 FILE_ID = SecureRandom.uuid
 
 get "/" do
-
   @files = Dir.glob("memos/*")
 
   def show_title(file)
     memo = File.open("#{file}").read
     hash = JSON.parse(memo)
-    title = "<a href=memo/#{hash["id"]}>#{hash["title"]}</a>"
+    title = "<a href=memos/#{hash["id"]}>#{hash["title"]}</a>"
   end
 
-  @title_list = @files.map { |f| show_title(f) }
-
-
-  # memo = open("memos/#{@name}").read
-  # hash = JSON.parse(memo)
-  # @id  = hash["id"]
-  # title = "<a href=memo/#{@id}>#{hash["title"]}</a>"
-  # @titles << title
+  @title_list = @files.map { |f| show_title(f) }.join("<br>")
   erb :home
 end
 
