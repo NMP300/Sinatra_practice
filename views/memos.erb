@@ -5,8 +5,15 @@
     <title>メモアプリ</title>
   </head>
   <body>
-    <h1>メモ</h1>
-    <p><%=@memo%></p>
+    <h1>メモアプリ</h1>
+    <h2><%= @title %></h2>
+    <p><%= @body %></p>
+    <div class="button">
+      <button type="submit">変更</button>
+    </div>
+    <div class="button">
+      <button type="submit">削除</button>
+    </div>
     <footer>@NMP</footer>
   </body>
 </html>

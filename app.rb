@@ -5,41 +5,35 @@ require "sinatra/reloader"
 require "securerandom"
 require "json"
 
-post "/new" do
-  @id = SecureRandom.uuid
-  @memo = { id: @id, title: params[:title], body: params[:body] }
-  File.open("memos/#{@memo[:id]}.json", "w") { |f| f.puts JSON.pretty_generate(@memo) }
+get "/new" do
   erb :new
 end
 
-# FILE_ID = SecureRandom.uuid
+post "/new" do
+  @id = SecureRandom.uuid
+  @memo = { id: @id, title: params[:title], body: params[:body] }
+  File.open("memos/#{@id}.json", "w") { |f| f.puts JSON.pretty_generate(@memo) }
+  erb :erb
+end
 
-# get "/" do
-#   @files = Dir.glob("memos/*")
+def memo_detail(memo)
+  @memo = JSON.parse(File.read(memo))
+end
 
-#   def show_title(file)
-#     memo = File.open("#{file}").read
-#     @hash = JSON.parse(memo)
-#     @title = "<a href=show/#{@hash["id"]}>#{@hash["title"]}</a>"
-#   end
+@file_list = Dir.glob("/memos/*")
 
-#   @title_list = @files.map { |f| show_title(f) }.join("<br>")
-#   erb :top
-# end
+get "/memos/:id" do
+  memo_detail("memos/#{params[:id]}.json")
+  @title = @memo["title"]
+  @body  = @memo["body"]
+  erb :memos
+end
 
-# get "/new" do
-#   erb :new
-# end
+get "/" do
+  @file_list = Dir.glob("/memos/*")
 
-# post "/new" do
-#   @memo_id = FILE_ID
-#   @memo = { id: @memo_id, title: params[:title], body: params[:body] }
-#   File.open("memos/#{@memo[:id]}.json", "w") { |f| f.puts JSON.pretty_generate(@memo) }
-#   erb :new
-# end
-
-
-
-# get "/edit" do
-#   erb :edit
-# end
+  @title_list = @file_list.map do |file|
+    memo_detail("memos/#{file}.json")
+  end
+  erb :top
+end
