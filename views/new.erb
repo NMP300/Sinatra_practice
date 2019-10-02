@@ -1,29 +1,34 @@
 <!DOCTYPE html>
-<html>
   <head>
     <meta charset='utf-8'>
+    <link rel="stylesheet" href="">
     <title>メモアプリ</title>
   </head>
-  <body>
-    <h1>メモアプリ</h1>
-    <div>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="header__title">メモアプリ</h1>
+    </header>
+    <div class="form">
       <form method="post" action="/memos/new">
-        <div>
-          <label for="title">タイトル:</label>
-          <input type="text" id="title" name="title">
+        <div class="form-item">
+          <label class="form-item__label">タイトル</label>
+          <input type="text" name="memo_title" class="form-item__text-input">
         </div>
-        <div>
-          <label for="body">メモ:</label>
-          <textarea type="text" id="body" name="body" cols="50" rows="10"></textarea>
+        <div class="form-item">
+          <label class="form-item__label">メモ</label>
+          <textarea name="memo_body" class="form-item__textarea"></textarea>
         </div>
-          <div class="button">
-            <button type="submit">保存</button>
+        <div class="form-item">
+          <div class="form-item__actions">
+            <input type="submit" value="送信する" class="form-item__action is-submit">
           </div>
       </form>
     </div>
-    <footer>@NMP</footer>
-  </body>
-</html>
-
-
-
+    <div class="footer">
+      <footer class="footer">
+        <h2>@NMP</h2>
+      </footer>
+    </div>
+  </div>
+</body>
