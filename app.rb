@@ -7,15 +7,16 @@ require "json"
 
 enable :method_override
 
-get "/new" do
+get "/memos/new" do
   erb :new
 end
 
-post "/new" do
+post "/memos/new" do
   @id = SecureRandom.uuid
   @memo = { id: @id, title: params[:title], body: params[:body] }
   File.open("memos/#{@id}.json", "w") { |f| f.puts JSON.pretty_generate(@memo) }
-  erb :erb
+  erb :new
+  redirect "/memos"
 end
 
 def memo_detail(memo)
@@ -26,12 +27,13 @@ end
 
 get "/memos/:id" do
   memo_detail("memos/#{params[:id]}.json")
+  @id    = @memo["id"]
   @title = @memo["title"]
   @body  = @memo["body"]
   erb :memos
 end
 
-get "/" do
+get "/memos" do
   @file_list = Dir.glob("memos/*")
 
   @title_list = @file_list.map do |file|
@@ -44,6 +46,20 @@ end
 delete "/memos/:id" do
   @id = params[:id]
   File.delete("memos/#{@id}.json")
-  redirect to "/"
-  erb :memos
+  redirect "/memos"
+end
+
+get "/memos/:id/edit" do
+  memo_detail("memos/#{params[:id]}.json")
+  @id    = @memo["id"]
+  @title = @memo["title"]
+  @body  = @memo["body"]
+  erb :edit
+end
+
+patch "/memos/:id" do
+  @memo = { id: params[:id], title: params[:title], body: params[:body] }
+  File.open("memos/#{params[:id]}.json", "w") { |f| f.puts JSON.pretty_generate(@memo) }
+  erb :edit
+  redirect "/memos/#{params[:id]}"
 end
