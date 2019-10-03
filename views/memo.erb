@@ -13,7 +13,12 @@
       <h2 class="main__title"><%= @memo_title %></h2>
       <p class="main__body"><%= @memo_body %></p>
     </div>
-    
+    <div class="btn">
+      <input class="edit__btn" type="button" onclick="location.href='/memos/<%= @id %>/edit'" value="編集">
+      <form method="post" action="/memos/<%= @id %>" >
+        <input type="hidden", name="_method", value="DELETE">
+      </form>
+    </div>
     <div class="footer">
       <footer class="footer">
         <h2>@NMP</h2>
