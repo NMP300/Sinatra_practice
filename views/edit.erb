@@ -1,17 +1,35 @@
 <!DOCTYPE html>
-<html>
   <head>
     <meta charset='utf-8'>
+    <link rel="stylesheet" href="">
     <title>メモアプリ</title>
   </head>
-  <body>
-    <h1>メモアプリ</h1>
-    <form method="post" action="/memos/<%= @id %>">
-      <input type="hidden", name="_method", value="PATCH">
-      <input type="text", name="title", value="<%= @title%>">
-      <textarea name="body" cols="30" rows="10"><%= @body%></textarea>
-      <input type="submit", value="変更">
-    </form>
-    <footer>@NMP</footer>
-  </body>
-</html>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="header__title">メモアプリ</h1>
+    </header>
+    <div class="form">
+      <form method="post" action="/memos/<%= @memo_id %>">
+        <div class="form-item">
+          <label class="form-item__label">タイトル</label>
+          <input type="text" name="title" value="<%= @memo_title %>" class="form-item__text-input">
+        </div>
+        <div class="form-item">
+          <label class="form-item__label">メモ</label>
+          <textarea name="body" class="form-item__textarea"><%= @memo_body %></textarea>
+        </div>
+        <div class="form-item">
+          <div class="form-item__actions">
+            <button class="delete__btn" type="submit", name="_method", value="PATCH">変更</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="footer">
+      <footer class="footer">
+        <h2>@NMP</h2>
+      </footer>
+    </div>
+  </div>
+</body>

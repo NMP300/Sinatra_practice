@@ -14,9 +14,9 @@
       <p class="main__body"><%= @memo_body %></p>
     </div>
     <div class="btn">
-      <input class="edit__btn" type="button" onclick="location.href='/memos/<%= @id %>/edit'" value="編集">
-      <form method="post" action="/memos/<%= @id %>" >
-        <input type="hidden", name="_method", value="DELETE">
+      <button class="edit__btn" type="submit" onclick="location.href='/memos/<%= @memo_id %>/edit'">編集</button>
+      <form method="post" action="/memos/<%= @memo_id %>" >
+        <button class="delete__btn" type="submit", name="_method", value="DELETE">削除</button>
       </form>
     </div>
     <div class="footer">
