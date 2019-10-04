@@ -48,13 +48,14 @@ class Memo
   end
 end
 
-# configure do
-#   mime_type :css, "text/css"
-#   mime_type :html, "text/html"
-# end
+configure do
+  mime_type :css, "text/css"
+  mime_type :html, "text/html"
+end
 
 get "/memos" do
   @title_list = Memo.new.title_list.join("<br>")
+  content_type :css
   erb :top
 end
 
