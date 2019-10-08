@@ -13,12 +13,12 @@
       <h1 class="header__title">メモアプリ</h1>
     </header>
     <div class="main">
-      <h2 class="main__title"><%= @memo_title %></h2>
-      <p class="main__body"><%= @memo_body %></p>
+      <h2 class="main__title"><%= @memo_contents[:title] %></h2>
+      <p class="main__body"><%= @memo_contents[:body] %></p>
       <div class="main-item">
         <div class="main-item__actions">
-          <button class="edit__btn" type="submit" onclick="location.href='/memos/<%= @memo_id %>/edit'">編集</button>
-          <form method="post" action="/memos/<%= @memo_id %>">
+          <button class="edit__btn" type="submit" onclick="location.href='/memos/<%= @memo_contents[:id] %>/edit'">編集</button>
+          <form method="post" action="/memos/<%= @memo_contents[:id] %>">
             <button class="delete__btn" type="submit" name="_method" value="DELETE">削除</button>
           </form>
         </div>
