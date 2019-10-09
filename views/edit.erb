@@ -14,12 +14,12 @@
     </header>
     <div class="main">
       <div class="form">
-        <form method="post" action="/memos/<%= @memo_id %>">
+        <form method="post" action="/memos/<%= @memo_contents[:id] %>">
           <div class="form-item">
-            <input type="text" name="title" value="<%= @memo_title %>" class="form-item__text-input">
+            <input type="text" name="title" value="<%= @memo_contents[:title] %>" class="form-item__text-input">
           </div>
           <div class="form-item">
-            <textarea name="body" class="form-item__textarea"><%= @memo_body %></textarea>
+            <textarea name="body" class="form-item__textarea"><%= @memo_contents[:body] %></textarea>
           </div>
           <div class="form-item">
             <div class="form-item__actions">

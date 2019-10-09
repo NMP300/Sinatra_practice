@@ -5,8 +5,6 @@ require "sinatra/reloader"
 require "securerandom"
 require "json"
 
-:method_override
-
 class Memo
   def initialize
     @contents = {}
@@ -21,29 +19,14 @@ class Memo
   end
 
   def contents(file)
-    @contents = JSON.parse(File.read(file))
-  end
-
-  def id(file)
-    contents(file)
-    @contents["id"]
-  end
-
-  def title(file)
-    contents(file)
-    @contents["title"]
-  end
-
-  def body(file)
-    contents(file)
-    @contents["body"]
+    @contents = JSON.parse(File.read(file), symbolize_names: true)
   end
 
   def title_list
     file_list = Dir.glob("memos/*")
     file_list.map do |file|
       contents("#{file}")
-      "<a href=memos/#{@contents["id"]}>#{@contents["title"]}</a>"
+      "<a href=memos/#{@contents[:id]}>#{@contents[:title]}</a>"
     end
   end
 end
@@ -65,23 +48,18 @@ post "/memos/new" do
   redirect "/memos"
 end
 
-# 改善点：DRY原則に反している
 get "/memos/:id" do
-  @memo_id    = Memo.new.id("memos/#{params[:id]}.json")
-  @memo_title = Memo.new.title("memos/#{params[:id]}.json")
-  @memo_body  = Memo.new.body("memos/#{params[:id]}.json")
+  @memo_contents = Memo.new.contents("memos/#{params[:id]}.json")
   erb :memo
 end
 
-# 改善点：DRY原則に反している
 get "/memos/:id/edit" do
-  @memo_id    = Memo.new.id("memos/#{params[:id]}.json")
-  @memo_title = Memo.new.title("memos/#{params[:id]}.json")
-  @memo_body  = Memo.new.body("memos/#{params[:id]}.json")
+  @memo_contents = Memo.new.contents("memos/#{params[:id]}.json")
   erb :edit
 end
 
 patch "/memos/:id" do
+  @memo_contents = Memo.new.contents("memos/#{params[:id]}.json")
   new_contents = { id: params[:id], title: params[:title], body: params[:body] }
   Memo.new.create(new_contents)
   erb :edit
