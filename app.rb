@@ -6,33 +6,28 @@ require "securerandom"
 require "json"
 
 class Memo
-  def initialize
-    @contents = {}
+  def find(id: id)
+    JSON.parse(File.read("memos/#{id}.json"), symbolize_names: true)
   end
 
-  def create(hash)
-    File.open("memos/#{hash[:id]}.json", "w") { |f| f.puts JSON.pretty_generate(hash) }
+  def create(title: title, body: body)
+    contents = { id: RandomSecure.uuid, title: title, body: body }
+    File.open("memos/#{id}.json", "w") { |f| f.puts JSON.pretty_generate(contents) }
   end
 
-  def delete(file)
-    File.delete(file)
+  def update(title: title, body: body)
+    new_contents = { id: params[:id], title: title, body: body }
+    File.open("memos/#{new_contents[:id]}.json", "w") { |f| f.puts JSON.pretty_generate(contents) }
   end
 
-  def contents(file)
-    @contents = JSON.parse(File.read(file), symbolize_names: true)
-  end
-
-  def title_list
-    file_list = Dir.glob("memos/*")
-    file_list.map do |file|
-      contents("#{file}")
-      "<a href=memos/#{@contents[:id]}>#{@contents[:title]}</a>"
-    end
+  def delete(id: id)
+    File.delete("memos/#{id}.json")
   end
 end
 
 get "/memos" do
-  @title_list = Memo.new.title_list.join("<br>")
+  file_list = Dir.glob("memos/*")
+  @memos = file_list.map { |file| JSON.parse(File.read(file), symbolize_names: true) }
   erb :top
 end
 
@@ -40,37 +35,30 @@ get "/memos/new" do
   erb :new
 end
 
+# 保存
 post "/memos/new" do
-  id       = SecureRandom.uuid
-  contents = { id: id, title: params[:title], body: params[:body] }
-  Memo.new.create(contents)
-  erb :new
-  redirect "/memos"
+  Memo.create(title: params[:title], body: params[:body])
 end
 
 get "/memos/:id" do
-  @memo_contents = Memo.new.contents("memos/#{params[:id]}.json")
+  @memo = Memo.new.find(id: params[:id])
   erb :memo
 end
 
 get "/memos/:id/edit" do
-  @memo_contents = Memo.new.contents("memos/#{params[:id]}.json")
+  @memo = Memo.new.find(id: params[:id])
   erb :edit
 end
 
+# 編集
 patch "/memos/:id" do
-  @memo_contents = Memo.new.contents("memos/#{params[:id]}.json")
-  new_contents = { id: params[:id], title: params[:title], body: params[:body] }
-  Memo.new.create(new_contents)
-  erb :edit
+  memo = Memo.new.find(id: params[:id])
+  memo.update(title: params[:title], body: params[:body])
   redirect "/memos"
 end
 
+# 削除
 delete "/memos/:id" do
-  Memo.new.delete("memos/#{params[:id]}.json")
+  Memo.new.delete(id: params[:id])
   redirect "/memos"
-end
-
-get "/practice" do
-  erb :practice
 end
