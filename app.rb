@@ -11,13 +11,13 @@ class Memo
   end
 
   def create(title: title, body: body)
-    contents = { id: RandomSecure.uuid, title: title, body: body }
-    File.open("memos/#{id}.json", "w") { |f| f.puts JSON.pretty_generate(contents) }
+    contents = { id: SecureRandom.uuid, title: title, body: body }
+    File.open("memos/#{contents[:id]}.json", "w") { |file| file.puts JSON.pretty_generate(contents) }
   end
 
-  def update(title: title, body: body)
-    new_contents = { id: params[:id], title: title, body: body }
-    File.open("memos/#{new_contents[:id]}.json", "w") { |f| f.puts JSON.pretty_generate(contents) }
+  def update(id: id, title: title, body: body)
+    new_contents = { id: id, title: title, body: body }
+    File.open("memos/#{id}.json", "w") { |file| file.puts JSON.pretty_generate(new_contents) }
   end
 
   def delete(id: id)
@@ -35,9 +35,9 @@ get "/memos/new" do
   erb :new
 end
 
-# 保存
 post "/memos/new" do
-  Memo.create(title: params[:title], body: params[:body])
+  Memo.new.create(title: params[:title], body: params[:body])
+  redirect "/memos"
 end
 
 get "/memos/:id" do
@@ -50,14 +50,12 @@ get "/memos/:id/edit" do
   erb :edit
 end
 
-# 編集
 patch "/memos/:id" do
-  memo = Memo.new.find(id: params[:id])
-  memo.update(title: params[:title], body: params[:body])
+  Memo.new.update(id: params[:id], title: params[:title], body: params[:body])
   redirect "/memos"
+  erb :edit
 end
 
-# 削除
 delete "/memos/:id" do
   Memo.new.delete(id: params[:id])
   redirect "/memos"
