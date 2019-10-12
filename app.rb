@@ -6,11 +6,11 @@ require "securerandom"
 require "json"
 
 class Memo
-  def find(id: id)
+  def self.find(id: id)
     JSON.parse(File.read("memos/#{id}.json"), symbolize_names: true)
   end
 
-  def create(title: title, body: body)
+  def self.create(title: title, body: body)
     contents = { id: SecureRandom.uuid, title: title, body: body }
     File.open("memos/#{contents[:id]}.json", "w") { |file| file.puts JSON.pretty_generate(contents) }
   end
@@ -36,17 +36,17 @@ get "/memos/new" do
 end
 
 post "/memos/new" do
-  Memo.new.create(title: params[:title], body: params[:body])
+  Memo.create(title: params[:title], body: params[:body])
   redirect "/memos"
 end
 
 get "/memos/:id" do
-  @memo = Memo.new.find(id: params[:id])
+  @memo = Memo.find(id: params[:id])
   erb :memo
 end
 
 get "/memos/:id/edit" do
-  @memo = Memo.new.find(id: params[:id])
+  @memo = Memo.find(id: params[:id])
   erb :edit
 end
 
