@@ -6,21 +6,21 @@ require "securerandom"
 require "json"
 
 class Memo
-  def self.find(id: id)
+  def self.find(id:)
     JSON.parse(File.read("memos/#{id}.json"), symbolize_names: true)
   end
 
-  def self.create(title: title, body: body)
+  def self.create(title:, body:)
     contents = { id: SecureRandom.uuid, title: title, body: body }
     File.open("memos/#{contents[:id]}.json", "w") { |file| file.puts JSON.pretty_generate(contents) }
   end
 
-  def update(id: id, title: title, body: body)
+  def update(id:, title:, body:)
     new_contents = { id: id, title: title, body: body }
     File.open("memos/#{id}.json", "w") { |file| file.puts JSON.pretty_generate(new_contents) }
   end
 
-  def delete(id: id)
+  def delete(id:)
     File.delete("memos/#{id}.json")
   end
 end
